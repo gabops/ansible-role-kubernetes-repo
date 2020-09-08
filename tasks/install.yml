@@ -1,0 +1,26 @@
+---
+- name: Install repository (RedHat)
+  yum_repository:
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+    description: Kubernetes Official Repository.
+    enabled: "{{ kubernetes_repo_enabled }}"
+    file: kubernetes
+    gpgcheck: true
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    name: kubernetes
+    state: "{{ kubernetes_repo_state }}"
+  when: ansible_os_family == "RedHat"
+
+- block:
+    - name: Install apt key (Debian)
+      apt_key:
+        state: present
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+    - name: Install repository (Debian)
+      apt_repository:
+        filename: kubernetes
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: "{{ kubernetes_repo_state }}"
+        update_cache: true
+  when: ansible_os_family == "Debian"

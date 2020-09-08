@@ -1,0 +1,4 @@
+---
+kubernetes_repo_state: present
+
+kubernetes_repo_enabled: true
